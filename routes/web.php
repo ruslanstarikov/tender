@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TenderController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('suppliers', function() {
         return view('admin.suppliers.index');
     })->name('suppliers.index');
+    
+    // Customer routes
+    Route::resource('customers', CustomerController::class);
+    Route::post('customers/{customer}/reset-password', [CustomerController::class, 'resetPassword'])->name('customers.reset-password');
+    Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
 });

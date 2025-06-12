@@ -56,8 +56,14 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.customers.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
                             <i class="iconoir-user text-lg"></i>
+                            <span>Customers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                            <i class="iconoir-user-circle text-lg"></i>
                             <span>Contacts</span>
                         </a>
                     </li>
