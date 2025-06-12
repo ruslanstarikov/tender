@@ -11,6 +11,15 @@ use Illuminate\Support\Str;
 class TenderController extends Controller
 {
     /**
+     * Display a listing of tenders.
+     */
+    public function index()
+    {
+        $tenders = Tender::with('customer')->latest()->paginate(10);
+        return view('admin.tenders.index', compact('tenders'));
+    }
+
+    /**
      * Show the form to create a new Tender (with media uploads).
      */
     public function create()

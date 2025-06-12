@@ -27,10 +27,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Show create form
+    // Tenders routes
+    Route::get('tenders', [TenderController::class, 'index'])->name('tenders.index');
     Route::get('tenders/create', [TenderController::class, 'create'])->name('tenders.create');
-    // Handle form submission
     Route::post('tenders', [TenderController::class, 'store'])->name('tenders.store');
-    // Preview a tender
     Route::get('tenders/{tender}', [TenderController::class, 'show'])->name('tenders.show');
+    
+    // Contacts routes (placeholder)
+    Route::get('contacts', function() {
+        return view('admin.contacts.index');
+    })->name('contacts.index');
+    
+    // Suppliers routes (placeholder)
+    Route::get('suppliers', function() {
+        return view('admin.suppliers.index');
+    })->name('suppliers.index');
 });
