@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +40,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.contacts.index');
     })->name('contacts.index');
     
-    // Suppliers routes (placeholder)
-    Route::get('suppliers', function() {
-        return view('admin.suppliers.index');
-    })->name('suppliers.index');
+    // Supplier routes
+    Route::resource('suppliers', SupplierController::class);
+    Route::post('suppliers/{supplier}/reset-password', [SupplierController::class, 'resetPassword'])->name('suppliers.reset-password');
+    Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle-status');
+    Route::patch('suppliers/{supplier}/toggle-verification', [SupplierController::class, 'toggleVerification'])->name('suppliers.toggle-verification');
+    Route::patch('suppliers/{supplier}/onboarding-status', [SupplierController::class, 'updateOnboardingStatus'])->name('suppliers.onboarding-status');
     
     // Customer routes
     Route::resource('customers', CustomerController::class);
