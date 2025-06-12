@@ -21,14 +21,21 @@ use App\Http\Controllers\SupplierController;
 Route::get('/', function () {
     return view('welcome');
 });
+// Admin Authentication Routes (no middleware)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login'])->name('login.submit');
+});
+
+// Protected Admin Routes
+Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(function () {
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// All other admin routes require authentication
+Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(function () {
     // Tenders routes
     Route::get('tenders', [TenderController::class, 'index'])->name('tenders.index');
     Route::get('tenders/create', [TenderController::class, 'create'])->name('tenders.create');

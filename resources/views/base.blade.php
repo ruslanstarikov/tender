@@ -21,7 +21,34 @@
                     </label>
                 </div>
                 <div class="flex-1">
-                    <a class="text-lg font-bold" href="/">Window Tender</a>
+                    <a class="text-lg font-bold" href="{{ route('admin.dashboard') }}">Window Tender</a>
+                </div>
+                <div class="flex-none">
+                    @auth('admin')
+                        <div class="dropdown dropdown-end">
+                            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                                <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                    <span class="text-sm font-semibold">{{ strtoupper(substr(auth('admin')->user()->name, 0, 1)) }}</span>
+                                </div>
+                            </label>
+                            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                                <li class="menu-title">
+                                    <span>{{ auth('admin')->user()->name }}</span>
+                                </li>
+                                <li><a href="#"><i class="iconoir-user"></i> Profile</a></li>
+                                <li><a href="#"><i class="iconoir-settings"></i> Settings</a></li>
+                                <li class="border-t border-base-300 mt-2 pt-2">
+                                    <form method="POST" action="{{ route('admin.logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left text-error">
+                                            <i class="iconoir-log-out"></i>
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @endauth
                 </div>
             </header>
 
