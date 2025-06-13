@@ -275,26 +275,13 @@ class Supplier extends Authenticatable
     }
 
     /**
-     * Common window frame specialty areas.
+     * Window frame specialty areas.
      */
     public static function getSpecialtyAreas()
     {
         return [
             'Aluminium Frames',
-            'Timber Frames',
-            'UPVC Frames',
-            'Steel Frames',
-            'Composite Frames',
-            'Double Glazing',
-            'Custom Windows',
-            'Commercial Windows',
-            'Residential Windows',
-            'Bi-fold Doors',
-            'Sliding Doors',
-            'French Doors',
-            'Security Screens',
-            'Window Hardware',
-            'Glass Supply',
+            'Plastic Frames',
         ];
     }
 
