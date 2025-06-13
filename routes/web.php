@@ -54,3 +54,31 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::post('customers/{customer}/reset-password', [CustomerController::class, 'resetPassword'])->name('customers.reset-password');
     Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
 });
+
+// Customer-facing routes
+use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
+use App\Http\Controllers\Customer\TenderRequestController;
+
+// Public customer routes (login, register)
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('register', [CustomerAuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [CustomerAuthController::class, 'register']);
+    Route::get('login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [CustomerAuthController::class, 'login']);
+});
+
+// Protected customer routes
+Route::prefix('customer')->name('customer.')->middleware(['customer.auth'])->group(function () {
+    Route::post('logout', [CustomerAuthController::class, 'logout'])->name('logout');
+    Route::get('dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+    
+    // Tender requests
+    Route::get('tender-requests', [TenderRequestController::class, 'index'])->name('tender-requests.index');
+    Route::get('tender-requests/create', [TenderRequestController::class, 'create'])->name('tender-requests.create');
+    Route::post('tender-requests', [TenderRequestController::class, 'store'])->name('tender-requests.store');
+    Route::get('tender-requests/{tenderRequest}', [TenderRequestController::class, 'show'])->name('tender-requests.show');
+    
+    // AJAX endpoints
+    Route::get('api/available-slots', [TenderRequestController::class, 'getAvailableSlots'])->name('api.available-slots');
+});

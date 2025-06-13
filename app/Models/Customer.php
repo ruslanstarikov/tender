@@ -164,6 +164,14 @@ class Customer extends Authenticatable
     }
 
     /**
+     * Get the tender requests for this customer.
+     */
+    public function tenderRequests()
+    {
+        return $this->hasMany(TenderRequest::class);
+    }
+
+    /**
      * Australian states for validation.
      */
     public static function getAustralianStates()
