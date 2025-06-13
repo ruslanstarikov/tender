@@ -19,7 +19,7 @@ use App\Http\Controllers\SupplierController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('customer.login');
 });
 // Admin Authentication Routes (no middleware)
 Route::prefix('admin')->name('admin.')->group(function () {
