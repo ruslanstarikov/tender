@@ -119,7 +119,7 @@ class SupplierController extends Controller
             
             // Business Details
             'specialty_areas' => 'nullable|array',
-            'specialty_areas.*' => 'string|max:100',
+            'specialty_areas.*' => ['string', Rule::in(Supplier::getSpecialtyAreas())],
             'certifications' => 'nullable|string|max:1000',
             'minimum_order_value' => 'nullable|numeric|min:0',
             'lead_time_days' => 'nullable|integer|min:0|max:365',
@@ -196,7 +196,7 @@ class SupplierController extends Controller
             
             // Business Details
             'specialty_areas' => 'nullable|array',
-            'specialty_areas.*' => 'string|max:100',
+            'specialty_areas.*' => ['string', Rule::in(Supplier::getSpecialtyAreas())],
             'certifications' => 'nullable|string|max:1000',
             'minimum_order_value' => 'nullable|numeric|min:0',
             'lead_time_days' => 'nullable|integer|min:0|max:365',
