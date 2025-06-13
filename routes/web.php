@@ -42,11 +42,6 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::post('tenders', [TenderController::class, 'store'])->name('tenders.store');
     Route::get('tenders/{tender}', [TenderController::class, 'show'])->name('tenders.show');
     
-    // Contacts routes (placeholder)
-    Route::get('contacts', function() {
-        return view('admin.contacts.index');
-    })->name('contacts.index');
-    
     // Supplier routes
     Route::resource('suppliers', SupplierController::class);
     Route::post('suppliers/{supplier}/reset-password', [SupplierController::class, 'resetPassword'])->name('suppliers.reset-password');

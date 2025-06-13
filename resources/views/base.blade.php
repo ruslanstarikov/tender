@@ -89,12 +89,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
-                            <i class="iconoir-user-circle text-lg"></i>
-                            <span>Contacts</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ route('admin.suppliers.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}">
                             <i class="iconoir-truck text-lg"></i>
                             <span>Suppliers</span>
