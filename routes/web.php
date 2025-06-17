@@ -2,11 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\TenderRequestController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
-
+// Customer-facing routes
+use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,24 +44,29 @@ Route::prefix('admin')->name('admin.')->middleware(['admin.auth'])->group(functi
     Route::get('tenders/create', [TenderController::class, 'create'])->name('tenders.create');
     Route::post('tenders', [TenderController::class, 'store'])->name('tenders.store');
     Route::get('tenders/{tender}', [TenderController::class, 'show'])->name('tenders.show');
-    
+
     // Supplier routes
     Route::resource('suppliers', SupplierController::class);
     Route::post('suppliers/{supplier}/reset-password', [SupplierController::class, 'resetPassword'])->name('suppliers.reset-password');
     Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle-status');
     Route::patch('suppliers/{supplier}/toggle-verification', [SupplierController::class, 'toggleVerification'])->name('suppliers.toggle-verification');
     Route::patch('suppliers/{supplier}/onboarding-status', [SupplierController::class, 'updateOnboardingStatus'])->name('suppliers.onboarding-status');
-    
+
     // Customer routes
     Route::resource('customers', CustomerController::class);
     Route::post('customers/{customer}/reset-password', [CustomerController::class, 'resetPassword'])->name('customers.reset-password');
     Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
-});
 
-// Customer-facing routes
-use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
-use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
-use App\Http\Controllers\Customer\TenderRequestController;
+    // Tender Requests routes
+    Route::get('tender-requests', [TenderRequestController::class, 'index'])->name('tender-requests.index');
+    Route::get('tender-requests/create', [TenderRequestController::class, 'create'])->name('tender-requests.create');
+    Route::post('tender-requests', [TenderRequestController::class, 'store'])->name('tender-requests.store');
+    Route::get('tender-requests/{tenderRequest}', [TenderRequestController::class, 'show'])->name('tender-requests.show');
+    Route::get('tender-requests/{tenderRequest}/edit', [TenderRequestController::class, 'edit'])->name('tender-requests.edit');
+    Route::put('tender-requests/{tenderRequest}', [TenderRequestController::class, 'update'])->name('tender-requests.update');
+    Route::post('tender-requests/{tenderRequest}/convert', [TenderRequestController::class, 'convertToTender'])->name('tender-requests.convert-to-tender');
+    Route::get('customers/{customer}/tender-requests', [TenderRequestController::class, 'customerTenderRequests'])->name('tender-requests.customer-requests');
+});
 
 // Public customer routes (login, register)
 Route::prefix('customer')->name('customer.')->group(function () {
@@ -72,13 +80,13 @@ Route::prefix('customer')->name('customer.')->group(function () {
 Route::prefix('customer')->name('customer.')->middleware(['customer.auth'])->group(function () {
     Route::post('logout', [CustomerAuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
-    
+
     // Tender requests
     Route::get('tender-requests', [TenderRequestController::class, 'index'])->name('tender-requests.index');
     Route::get('tender-requests/create', [TenderRequestController::class, 'create'])->name('tender-requests.create');
     Route::post('tender-requests', [TenderRequestController::class, 'store'])->name('tender-requests.store');
     Route::get('tender-requests/{tenderRequest}', [TenderRequestController::class, 'show'])->name('tender-requests.show');
-    
+
     // AJAX endpoints
     Route::get('api/available-slots', [TenderRequestController::class, 'getAvailableSlots'])->name('api.available-slots');
 });

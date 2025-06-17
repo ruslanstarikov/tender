@@ -221,6 +221,15 @@
                             <div class="stat-value text-primary">{{ $customer->tenders->count() }}</div>
                         </div>
                         <div class="stat">
+                            <div class="stat-title">Tender Requests</div>
+                            <div class="stat-value text-info">{{ $customer->tenderRequests->count() }}</div>
+                            <div class="stat-actions">
+                                <a href="{{ route('admin.tender-requests.customer-requests', $customer) }}" class="btn btn-sm btn-ghost">
+                                    View All
+                                </a>
+                            </div>
+                        </div>
+                        <div class="stat">
                             <div class="stat-title">Member Since</div>
                             <div class="stat-value text-sm">{{ $customer->created_at->format('M Y') }}</div>
                         </div>

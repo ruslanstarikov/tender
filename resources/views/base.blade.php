@@ -10,7 +10,7 @@
 <body class="bg-base-100 text-base-content">
     <div class="drawer lg:drawer-open">
         <input id="drawer-toggle" type="checkbox" class="drawer-toggle" />
-        
+
         <!-- Main Content -->
         <div class="drawer-content flex flex-col">
             <!-- Header -->
@@ -56,7 +56,7 @@
             <main class="flex-1 p-6">
                 @yield('content')
             </main>
-            
+
             <!-- Footer -->
             <footer class="footer items-center p-4 bg-base-200 text-base-content">
                 <div class="items-center grid-flow-col">
@@ -64,7 +64,7 @@
                 </div>
             </footer>
         </div>
-        
+
         <!-- Sidebar -->
         <div class="drawer-side">
             <label for="drawer-toggle" class="drawer-overlay"></label>
@@ -73,7 +73,7 @@
                 <div class="p-4 border-b border-base-content/10">
                     <h2 class="text-lg font-semibold text-base-content">Navigation</h2>
                 </div>
-                
+
                 <!-- Menu -->
                 <ul class="menu p-4 space-y-2 text-base-content">
                     <li>
@@ -92,6 +92,12 @@
                         <a href="{{ route('admin.suppliers.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}">
                             <i class="iconoir-truck text-lg"></i>
                             <span>Suppliers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.tender-requests.index') }}" class="flex items-center gap-3 {{ request()->routeIs('admin.tender-requests.*') ? 'active' : '' }}">
+                            <i class="iconoir-box text-lg"></i>
+                            <span>Tender Requests</span>
                         </a>
                     </li>
                     <li>
