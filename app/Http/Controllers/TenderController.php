@@ -6,6 +6,7 @@ use App\Models\Tender;
 use App\Models\TenderMedia;
 use App\Models\TenderFrame;
 use App\Models\FrameType;
+use App\Models\WindowTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -185,6 +186,31 @@ class TenderController extends Controller
                 'config_string' => $frameType->config_string,
                 'display_name' => $frameType->display_name,
                 'image_url' => $frameType->image_url,
+            ];
+        }));
+    }
+
+    /**
+     * API endpoint to get all window templates.
+     */
+    public function getWindowTemplates()
+    {
+        $templates = WindowTemplate::with('templateCells')->orderBy('name')->get();
+        
+        return response()->json($templates->map(function ($template) {
+            return [
+                'id' => $template->id,
+                'name' => $template->name,
+                'cells' => $template->templateCells->map(function ($cell) {
+                    return [
+                        'id' => $cell->id,
+                        'cell_index' => $cell->cell_index,
+                        'x' => (float) $cell->x,
+                        'y' => (float) $cell->y,
+                        'width_ratio' => (float) $cell->width_ratio,
+                        'height_ratio' => (float) $cell->height_ratio,
+                    ];
+                })->sortBy('cell_index')->values(),
             ];
         }));
     }

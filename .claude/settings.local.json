@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan:*)"
     ],
     "deny": []
   }

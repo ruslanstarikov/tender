@@ -69,24 +69,24 @@
 
             <hr class="my-6">
 
-            {{-- Frame Selection Section --}}
-            <h3 class="text-xl font-semibold mb-2">Frame Selection</h3>
-            <p class="text-sm text-gray-600 mb-4">Add window frames to your project by selecting from our catalogue.</p>
+            {{-- Window Template Selection Section --}}
+            <h3 class="text-xl font-semibold mb-2">Window Configuration</h3>
+            <p class="text-sm text-gray-600 mb-4">Configure windows using templates and customize each cell's opening directions.</p>
 
-            <div id="frames-section" class="mb-6">
+            <div id="windows-section" class="mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h4 class="text-lg font-medium">Selected Frames</h4>
-                    <button type="button" id="add-frame-btn" class="btn btn-primary btn-sm">
-                        Add Frame
+                    <h4 class="text-lg font-medium">Configured Windows</h4>
+                    <button type="button" id="add-window-btn" class="btn btn-primary btn-sm">
+                        Add Window
                     </button>
                 </div>
 
-                <div id="selected-frames" class="space-y-4">
-                    <!-- Selected frames will be displayed here -->
+                <div id="selected-windows" class="space-y-4">
+                    <!-- Selected windows will be displayed here -->
                 </div>
 
-                <div id="no-frames-message" class="text-center text-gray-500 py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                    <p>No frames selected yet. Click "Add Frame" to get started.</p>
+                <div id="no-windows-message" class="text-center text-gray-500 py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <p>No windows configured yet. Click "Add Window" to get started.</p>
                 </div>
             </div>
 
@@ -147,44 +147,30 @@
         </form>
     </div>
 
-    {{-- Frame Catalogue Modal --}}
-    <div id="frame-catalogue-modal" class="modal">
-        <div class="modal-box w-11/12 max-w-5xl">
+    {{-- Window Template Selection Modal --}}
+    <div id="template-selection-modal" class="modal">
+        <div class="modal-box w-11/12 max-w-4xl">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Select Frame Type</h3>
-                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeFrameCatalogue()">✕</button>
+                <h3 class="font-bold text-lg">Select Window Template</h3>
+                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeTemplateSelection()">✕</button>
             </div>
             
-            <div class="mb-4">
-                <div class="flex gap-2 flex-wrap">
-                    <button class="btn btn-sm frame-filter-btn active" data-type="all">All</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="fixed">Fixed</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="casement">Casement</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="awning">Awning</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="hopper">Hopper</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="sliding">Sliding</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="doublehung">Double Hung</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="tilt-turn">Tilt & Turn</button>
-                    <button class="btn btn-sm frame-filter-btn" data-type="combo">Combo</button>
-                </div>
-            </div>
-
-            <div id="frame-catalogue-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
-                <!-- Frame types will be loaded here -->
+            <div id="template-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                <!-- Window templates will be loaded here -->
             </div>
         </div>
     </div>
 
-    {{-- Frame Configuration Modal --}}
-    <div id="frame-config-modal" class="modal">
-        <div class="modal-box">
+    {{-- Window Configuration Modal --}}
+    <div id="window-config-modal" class="modal">
+        <div class="modal-box w-11/12 max-w-6xl">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg">Configure Frame</h3>
-                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeFrameConfig()">✕</button>
+                <h3 class="font-bold text-lg">Configure Window</h3>
+                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeWindowConfig()">✕</button>
             </div>
             
-            <div id="frame-config-content">
-                <!-- Frame configuration form will be loaded here -->
+            <div id="window-config-content">
+                <!-- Window configuration form will be loaded here -->
             </div>
         </div>
     </div>

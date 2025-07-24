@@ -94,4 +94,10 @@ Route::prefix('customer')->name('customer.')->middleware(['customer.auth'])->gro
 // API endpoints (can be accessed without authentication for now)
 Route::prefix('api')->group(function () {
     Route::get('frame-types', [TenderController::class, 'getFrameTypes'])->name('api.frame-types');
+    Route::get('window-templates', [TenderController::class, 'getWindowTemplates'])->name('api.window-templates');
 });
+
+// Test route for window configuration
+Route::get('/test-windows', function () {
+    return view('windows.create');
+})->name('test.windows');
