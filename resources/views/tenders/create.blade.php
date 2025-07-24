@@ -69,6 +69,29 @@
 
             <hr class="my-6">
 
+            {{-- Frame Selection Section --}}
+            <h3 class="text-xl font-semibold mb-2">Frame Selection</h3>
+            <p class="text-sm text-gray-600 mb-4">Add window frames to your project by selecting from our catalogue.</p>
+
+            <div id="frames-section" class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-lg font-medium">Selected Frames</h4>
+                    <button type="button" id="add-frame-btn" class="btn btn-primary btn-sm">
+                        Add Frame
+                    </button>
+                </div>
+
+                <div id="selected-frames" class="space-y-4">
+                    <!-- Selected frames will be displayed here -->
+                </div>
+
+                <div id="no-frames-message" class="text-center text-gray-500 py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <p>No frames selected yet. Click "Add Frame" to get started.</p>
+                </div>
+            </div>
+
+            <hr class="my-6">
+
             {{-- Media Upload Sections --}}
             <h3 class="text-xl font-semibold mb-2">Upload Media</h3>
             <p class="text-sm text-gray-600 mb-4">You may upload multiple photos/videos under each category. For Polycam models, upload under "Polycam Models."</p>
@@ -123,4 +146,243 @@
             </div>
         </form>
     </div>
+
+    {{-- Frame Catalogue Modal --}}
+    <div id="frame-catalogue-modal" class="modal">
+        <div class="modal-box w-11/12 max-w-5xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Select Frame Type</h3>
+                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeFrameCatalogue()">✕</button>
+            </div>
+            
+            <div class="mb-4">
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn btn-sm frame-filter-btn active" data-type="all">All</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="fixed">Fixed</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="casement">Casement</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="awning">Awning</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="hopper">Hopper</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="sliding">Sliding</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="doublehung">Double Hung</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="tilt-turn">Tilt & Turn</button>
+                    <button class="btn btn-sm frame-filter-btn" data-type="combo">Combo</button>
+                </div>
+            </div>
+
+            <div id="frame-catalogue-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
+                <!-- Frame types will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    {{-- Frame Configuration Modal --}}
+    <div id="frame-config-modal" class="modal">
+        <div class="modal-box">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">Configure Frame</h3>
+                <button class="btn btn-sm btn-circle btn-ghost" onclick="closeFrameConfig()">✕</button>
+            </div>
+            
+            <div id="frame-config-content">
+                <!-- Frame configuration form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let frameTypes = [];
+        let selectedFrames = [];
+        let frameCounter = 0;
+
+        // Load frame types on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFrameTypes();
+            initializeEventListeners();
+        });
+
+        function loadFrameTypes() {
+            console.log('Loading frame types...');
+            fetch('/api/frame-types')
+                .then(response => {
+                    console.log('API response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Frame types loaded:', data.length);
+                    frameTypes = data;
+                    renderFrameCatalogue();
+                })
+                .catch(error => {
+                    console.error('Error loading frame types:', error);
+                });
+        }
+
+        function initializeEventListeners() {
+            const addFrameBtn = document.getElementById('add-frame-btn');
+            if (addFrameBtn) {
+                addFrameBtn.addEventListener('click', function() {
+                    console.log('Add frame button clicked');
+                    openFrameCatalogue();
+                });
+            } else {
+                console.error('Add frame button not found');
+            }
+        }
+
+        function renderFrameCatalogue(filterType = 'all') {
+            const grid = document.getElementById('frame-catalogue-grid');
+            const filteredFrames = filterType === 'all' 
+                ? frameTypes 
+                : frameTypes.filter(frame => frame.type === filterType);
+
+            grid.innerHTML = filteredFrames.map(frame => `
+                <div class="frame-item border rounded-lg p-3 cursor-pointer hover:bg-gray-50 text-center" 
+                     onclick="selectFrameType(${frame.id})">
+                    <img src="${frame.image_url}" alt="${frame.display_name}" class="w-full h-24 object-contain mb-2">
+                    <h4 class="font-medium text-sm">${frame.display_name}</h4>
+                    <p class="text-xs text-gray-500">${frame.config_string}</p>
+                </div>
+            `).join('');
+        }
+
+        function openFrameCatalogue() {
+            document.getElementById('frame-catalogue-modal').classList.add('modal-open');
+        }
+
+        function closeFrameCatalogue() {
+            document.getElementById('frame-catalogue-modal').classList.remove('modal-open');
+        }
+
+        function selectFrameType(frameTypeId) {
+            const frameType = frameTypes.find(f => f.id === frameTypeId);
+            if (!frameType) return;
+
+            closeFrameCatalogue();
+            showFrameConfig(frameType);
+        }
+
+        function showFrameConfig(frameType) {
+            const modal = document.getElementById('frame-config-modal');
+            const content = document.getElementById('frame-config-content');
+            
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="text-center">
+                        <img src="${frameType.image_url}" alt="${frameType.display_name}" class="w-32 h-24 object-contain mx-auto mb-2">
+                        <h4 class="font-medium">${frameType.display_name}</h4>
+                        <p class="text-sm text-gray-500">${frameType.config_string}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="label"><span class="label-text">Width (mm)</span></label>
+                            <input type="number" id="frame-width" class="input input-bordered w-full" min="100" max="5000" value="1200" required>
+                        </div>
+                        <div>
+                            <label class="label"><span class="label-text">Height (mm)</span></label>
+                            <input type="number" id="frame-height" class="input input-bordered w-full" min="100" max="3000" value="1500" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="label"><span class="label-text">Quantity</span></label>
+                        <input type="number" id="frame-quantity" class="input input-bordered w-full" min="1" max="100" value="1" required>
+                    </div>
+                    
+                    <div class="flex gap-2 justify-end">
+                        <button class="btn btn-ghost" onclick="closeFrameConfig()">Cancel</button>
+                        <button class="btn btn-primary" onclick="addFrameToProject(${frameType.id})">Add Frame</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('modal-open');
+        }
+
+        function closeFrameConfig() {
+            document.getElementById('frame-config-modal').classList.remove('modal-open');
+        }
+
+        function addFrameToProject(frameTypeId) {
+            const frameType = frameTypes.find(f => f.id === frameTypeId);
+            const width = document.getElementById('frame-width').value;
+            const height = document.getElementById('frame-height').value;
+            const quantity = document.getElementById('frame-quantity').value;
+
+            if (!width || !height || !quantity || width < 100 || height < 100 || quantity < 1) {
+                alert('Please enter valid dimensions and quantity');
+                return;
+            }
+
+            const frame = {
+                id: frameCounter++,
+                frame_type_id: frameTypeId,
+                frame_type: frameType,
+                width: parseFloat(width),
+                height: parseFloat(height),
+                quantity: parseInt(quantity)
+            };
+
+            selectedFrames.push(frame);
+            renderSelectedFrames();
+            closeFrameConfig();
+        }
+
+        function renderSelectedFrames() {
+            const container = document.getElementById('selected-frames');
+            const noFramesMessage = document.getElementById('no-frames-message');
+            
+            if (selectedFrames.length === 0) {
+                noFramesMessage.style.display = 'block';
+                container.innerHTML = '';
+                return;
+            }
+            
+            noFramesMessage.style.display = 'none';
+            
+            container.innerHTML = selectedFrames.map(frame => `
+                <div class="frame-item border rounded-lg p-4">
+                    <div class="flex items-center gap-4">
+                        <img src="${frame.frame_type.image_url}" alt="${frame.frame_type.display_name}" class="w-16 h-12 object-contain">
+                        <div class="flex-1">
+                            <h4 class="font-medium">${frame.frame_type.display_name}</h4>
+                            <p class="text-sm text-gray-500">${frame.width}mm × ${frame.height}mm | Qty: ${frame.quantity}</p>
+                            <p class="text-xs text-gray-400">${frame.frame_type.config_string}</p>
+                        </div>
+                        <button class="btn btn-sm btn-error" onclick="removeFrame(${frame.id})">Remove</button>
+                    </div>
+                    <input type="hidden" name="frames[${frame.id}][frame_type_id]" value="${frame.frame_type_id}">
+                    <input type="hidden" name="frames[${frame.id}][width]" value="${frame.width}">
+                    <input type="hidden" name="frames[${frame.id}][height]" value="${frame.height}">
+                    <input type="hidden" name="frames[${frame.id}][quantity]" value="${frame.quantity}">
+                </div>
+            `).join('');
+        }
+
+        function removeFrame(frameId) {
+            selectedFrames = selectedFrames.filter(frame => frame.id !== frameId);
+            renderSelectedFrames();
+        }
+
+        // Frame filter buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('frame-filter-btn')) {
+                document.querySelectorAll('.frame-filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                const filterType = e.target.dataset.type;
+                renderFrameCatalogue(filterType);
+            }
+        });
+    </script>
+
+    <style>
+        .frame-filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .frame-item:hover {
+            border-color: var(--primary);
+        }
+    </style>
 @endsection

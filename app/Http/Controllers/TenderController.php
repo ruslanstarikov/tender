@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Tender;
 use App\Models\TenderMedia;
+use App\Models\TenderFrame;
+use App\Models\FrameType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -43,6 +45,11 @@ class TenderController extends Controller
             'work_end_datetime'   => 'required|date|after_or_equal:work_start_datetime',
             'premises_entry_info' => 'nullable|string',
             'frame_details'       => 'nullable|string',
+            'frames'              => 'nullable|array',
+            'frames.*.frame_type_id' => 'required|exists:frame_types,id',
+            'frames.*.width'      => 'required|numeric|min:100|max:5000',
+            'frames.*.height'     => 'required|numeric|min:100|max:3000',
+            'frames.*.quantity'   => 'required|integer|min:1|max:100',
             // We'll validate media in a custom loop below
         ]);
 
@@ -66,7 +73,20 @@ class TenderController extends Controller
             'frame_details'       => $validated['frame_details'] ?? null,
         ]);
 
-        // 3) Handle multiple file uploads:
+        // 3) Handle frame selections
+        if (isset($validated['frames']) && is_array($validated['frames'])) {
+            foreach ($validated['frames'] as $frameData) {
+                TenderFrame::create([
+                    'tender_id' => $tender->id,
+                    'frame_type_id' => $frameData['frame_type_id'],
+                    'width' => $frameData['width'],
+                    'height' => $frameData['height'],
+                    'quantity' => $frameData['quantity'],
+                ]);
+            }
+        }
+
+        // 4) Handle multiple file uploads:
         //
         //    We expect the form to send media as:
         //      media[inside][photos][] (image/*),
@@ -133,7 +153,7 @@ class TenderController extends Controller
             }
         }
 
-        // 4) Redirect to the preview page
+        // 5) Redirect to the preview page
         return redirect()->route('admin.tenders.show', $tender->id)
             ->with('success', 'Tender created successfully.');
     }
@@ -143,8 +163,29 @@ class TenderController extends Controller
      */
     public function show(Tender $tender)
     {
-        // Eager‐load media
-        $tender->load('media');
+        // Eager‐load media and frames
+        $tender->load(['media', 'frames.frameType']);
         return view('tenders.show', compact('tender'));
+    }
+
+    /**
+     * API endpoint to get all frame types.
+     */
+    public function getFrameTypes()
+    {
+        $frameTypes = FrameType::orderBy('type')->orderBy('panels')->get();
+        
+        return response()->json($frameTypes->map(function ($frameType) {
+            return [
+                'id' => $frameType->id,
+                'filename' => $frameType->filename,
+                'type' => $frameType->type,
+                'panels' => $frameType->panels,
+                'config' => $frameType->config,
+                'config_string' => $frameType->config_string,
+                'display_name' => $frameType->display_name,
+                'image_url' => $frameType->image_url,
+            ];
+        }));
     }
 }

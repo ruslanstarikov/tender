@@ -90,3 +90,8 @@ Route::prefix('customer')->name('customer.')->middleware(['customer.auth'])->gro
     // AJAX endpoints
     Route::get('api/available-slots', [TenderRequestController::class, 'getAvailableSlots'])->name('api.available-slots');
 });
+
+// API endpoints (can be accessed without authentication for now)
+Route::prefix('api')->group(function () {
+    Route::get('frame-types', [TenderController::class, 'getFrameTypes'])->name('api.frame-types');
+});

@@ -22,4 +22,9 @@ class Tender extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function frames()
+    {
+        return $this->hasMany(TenderFrame::class);
+    }
 }
