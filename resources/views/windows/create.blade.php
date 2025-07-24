@@ -223,6 +223,9 @@
                             ${generateWindowPreviewSVG(template, 200, 150)}
                         </div>
                     </div>
+                    <div class="text-xs text-gray-600 mt-2 text-center">
+                        Red dashed lines indicate opening directions. Configure dimensions to see detailed measurements.
+                    </div>
                 </div>
                 
                 <div class="flex gap-2 justify-end mt-6">
@@ -232,22 +235,157 @@
             `;
             
             modal.classList.add('modal-open');
+            
+            // Add event listeners for real-time preview updates
+            setTimeout(() => {
+                const previewInputs = ['window-width', 'window-height'];
+                const checkboxes = template.cells.map((_, index) => 
+                    [`cell-${index}-left`, `cell-${index}-right`, `cell-${index}-top`, `cell-${index}-bottom`]
+                ).flat();
+                
+                [...previewInputs, ...checkboxes].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener(element.type === 'checkbox' ? 'change' : 'input', 
+                            () => updatePreview(template));
+                    }
+                });
+            }, 100);
+        }
+        
+        function updatePreview(template) {
+            const width = document.getElementById('window-width')?.value || 1200;
+            const height = document.getElementById('window-height')?.value || 1400;
+            
+            const cellConfigs = template.cells.map((cell, index) => ({
+                cell_index: cell.cell_index,
+                open_left: document.getElementById(`cell-${index}-left`)?.checked || false,
+                open_right: document.getElementById(`cell-${index}-right`)?.checked || false,
+                open_top: document.getElementById(`cell-${index}-top`)?.checked || false,
+                open_bottom: document.getElementById(`cell-${index}-bottom`)?.checked || false
+            }));
+            
+            const previewDiv = document.getElementById('window-preview');
+            if (previewDiv) {
+                previewDiv.innerHTML = generateWindowPreviewSVG(template, 200, 150, parseInt(width), parseInt(height), cellConfigs);
+            }
         }
 
-        function generateWindowPreviewSVG(template, width, height) {
+        function generateWindowPreviewSVG(template, width, height, windowWidth = null, windowHeight = null, cellConfigs = null) {
             const cells = template.cells || [];
-            const cellElements = cells.map(cell => {
-                const x = cell.x * width;
-                const y = cell.y * height;
+            const margin = 40; // Space for dimensions
+            const svgWidth = width + (margin * 2);
+            const svgHeight = height + (margin * 2);
+            
+            let elements = [];
+            
+            // Draw cells with opening indicators
+            cells.forEach((cell, index) => {
+                const x = cell.x * width + margin;
+                const y = cell.y * height + margin;
                 const w = cell.width_ratio * width;
                 const h = cell.height_ratio * height;
                 
-                return `<rect x="${x}" y="${y}" width="${w}" height="${h}" 
-                        fill="rgba(59, 130, 246, 0.1)" stroke="#3b82f6" stroke-width="2"/>`;
-            }).join('');
+                // Cell rectangle
+                elements.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" 
+                    fill="rgba(59, 130, 246, 0.05)" stroke="#3b82f6" stroke-width="2"/>`);
+                
+                // Cell opening indicators (if configurations provided)
+                if (cellConfigs && cellConfigs[index]) {
+                    const config = cellConfigs[index];
+                    const centerX = x + w/2;
+                    const centerY = y + h/2;
+                    
+                    // Opening angles (60 degrees)
+                    if (config.open_left) {
+                        const angle1 = Math.PI * 5/6; // 150 degrees
+                        const angle2 = Math.PI * 7/6; // 210 degrees
+                        const len = Math.min(w, h) * 0.15;
+                        const x1 = x + len * Math.cos(angle1);
+                        const y1 = centerY + len * Math.sin(angle1);
+                        const x2 = x + len * Math.cos(angle2);
+                        const y2 = centerY + len * Math.sin(angle2);
+                        elements.push(`<path d="M${x} ${centerY} L${x1} ${y1} M${x} ${centerY} L${x2} ${y2}" 
+                            stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>`);
+                    }
+                    
+                    if (config.open_right) {
+                        const angle1 = Math.PI * 1/6; // 30 degrees
+                        const angle2 = Math.PI * 11/6; // 330 degrees
+                        const len = Math.min(w, h) * 0.15;
+                        const x1 = (x + w) + len * Math.cos(angle1);
+                        const y1 = centerY + len * Math.sin(angle1);
+                        const x2 = (x + w) + len * Math.cos(angle2);
+                        const y2 = centerY + len * Math.sin(angle2);
+                        elements.push(`<path d="M${x + w} ${centerY} L${x1} ${y1} M${x + w} ${centerY} L${x2} ${y2}" 
+                            stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>`);
+                    }
+                    
+                    if (config.open_top) {
+                        const angle1 = Math.PI * 2/3; // 120 degrees
+                        const angle2 = Math.PI * 1/3; // 60 degrees
+                        const len = Math.min(w, h) * 0.15;
+                        const x1 = centerX + len * Math.cos(angle1);
+                        const y1 = y + len * Math.sin(angle1);
+                        const x2 = centerX + len * Math.cos(angle2);
+                        const y2 = y + len * Math.sin(angle2);
+                        elements.push(`<path d="M${centerX} ${y} L${x1} ${y1} M${centerX} ${y} L${x2} ${y2}" 
+                            stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>`);
+                    }
+                    
+                    if (config.open_bottom) {
+                        const angle1 = Math.PI * 4/3; // 240 degrees
+                        const angle2 = Math.PI * 5/3; // 300 degrees
+                        const len = Math.min(w, h) * 0.15;
+                        const x1 = centerX + len * Math.cos(angle1);
+                        const y1 = (y + h) + len * Math.sin(angle1);
+                        const x2 = centerX + len * Math.cos(angle2);
+                        const y2 = (y + h) + len * Math.sin(angle2);
+                        elements.push(`<path d="M${centerX} ${y + h} L${x1} ${y1} M${centerX} ${y + h} L${x2} ${y2}" 
+                            stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>`);
+                    }
+                }
+                
+                // Cell dimensions (if window dimensions provided)
+                if (windowWidth && windowHeight) {
+                    const actualW = Math.round(cell.width_ratio * windowWidth);
+                    const actualH = Math.round(cell.height_ratio * windowHeight);
+                    
+                    // Width dimension line
+                    elements.push(`<line x1="${x}" y1="${y - 10}" x2="${x + w}" y2="${y - 10}" 
+                        stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>`);
+                    elements.push(`<text x="${x + w/2}" y="${y - 15}" text-anchor="middle" 
+                        font-family="Arial" font-size="10" fill="#666">${actualW}mm</text>`);
+                    
+                    // Height dimension line
+                    elements.push(`<line x1="${x - 10}" y1="${y}" x2="${x - 10}" y2="${y + h}" 
+                        stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>`);
+                    elements.push(`<text x="${x - 15}" y="${y + h/2}" text-anchor="middle" 
+                        font-family="Arial" font-size="10" fill="#666" transform="rotate(-90, ${x - 15}, ${y + h/2})">${actualH}mm</text>`);
+                    
+                    // Cell label
+                    elements.push(`<text x="${x + w/2}" y="${y + h/2}" text-anchor="middle" 
+                        font-family="Arial" font-size="12" fill="#333" font-weight="bold">Cell ${cell.cell_index + 1}</text>`);
+                }
+            });
+            
+            // Overall window dimensions
+            if (windowWidth && windowHeight) {
+                // Overall width dimension
+                elements.push(`<line x1="${margin}" y1="${margin + height + 20}" x2="${margin + width}" y2="${margin + height + 20}" 
+                    stroke="#333" stroke-width="2" stroke-dasharray="4,4"/>`);
+                elements.push(`<text x="${margin + width/2}" y="${margin + height + 35}" text-anchor="middle" 
+                    font-family="Arial" font-size="12" fill="#333" font-weight="bold">${windowWidth}mm</text>`);
+                
+                // Overall height dimension
+                elements.push(`<line x1="${margin + width + 20}" y1="${margin}" x2="${margin + width + 20}" y2="${margin + height}" 
+                    stroke="#333" stroke-width="2" stroke-dasharray="4,4"/>`);
+                elements.push(`<text x="${margin + width + 35}" y="${margin + height/2}" text-anchor="middle" 
+                    font-family="Arial" font-size="12" fill="#333" font-weight="bold" transform="rotate(-90, ${margin + width + 35}, ${margin + height/2})">${windowHeight}mm</text>`);
+            }
 
-            return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-                ${cellElements}
+            return `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
+                ${elements.join('')}
             </svg>`;
         }
 
@@ -303,28 +441,40 @@
             noWindowsMessage.style.display = 'none';
             
             container.innerHTML = selectedWindows.map(window => `
-                <div class="window-item border rounded-lg p-4">
-                    <div class="flex items-start gap-4">
+                <div class="window-item border rounded-lg p-6">
+                    <div class="flex items-start gap-6">
                         <div class="flex-shrink-0">
-                            ${generateWindowPreviewSVG(window.template, 80, 60)}
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-medium">${window.label}</h4>
-                            <p class="text-sm text-gray-500">${window.template.name} • ${window.width_mm}mm × ${window.height_mm}mm</p>
-                            <p class="text-xs text-gray-400">${window.cells.length} cells configured</p>
-                            ${window.notes ? `<p class="text-xs text-gray-400 mt-1">${window.notes}</p>` : ''}
-                            <div class="text-xs text-gray-400 mt-1">
-                                Opening directions: ${window.cells.map(cell => {
-                                    const directions = [];
-                                    if (cell.open_left) directions.push('L');
-                                    if (cell.open_right) directions.push('R');
-                                    if (cell.open_top) directions.push('T');
-                                    if (cell.open_bottom) directions.push('B');
-                                    return `Cell ${cell.cell_index + 1}: ${directions.length ? directions.join(',') : 'Fixed'}`;
-                                }).join(' | ')}
+                            <h5 class="font-medium text-sm mb-2">Technical Drawing</h5>
+                            <div class="border rounded p-2 bg-white">
+                                ${generateWindowPreviewSVG(window.template, 300, 200, window.width_mm, window.height_mm, window.cells)}
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-error" onclick="removeWindow(${window.id})">Remove</button>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-lg">${window.label}</h4>
+                            <p class="text-sm text-gray-600 mb-2">${window.template.name} • ${window.width_mm}mm × ${window.height_mm}mm</p>
+                            <p class="text-xs text-gray-500 mb-2">${window.cells.length} cells configured</p>
+                            ${window.notes ? `<p class="text-sm text-gray-600 mb-2"><strong>Notes:</strong> ${window.notes}</p>` : ''}
+                            
+                            <div class="bg-gray-50 rounded p-3 text-xs">
+                                <strong>Cell Configurations:</strong><br>
+                                ${window.cells.map(cell => {
+                                    const directions = [];
+                                    if (cell.open_left) directions.push('Left');
+                                    if (cell.open_right) directions.push('Right');
+                                    if (cell.open_top) directions.push('Top');
+                                    if (cell.open_bottom) directions.push('Bottom');
+                                    
+                                    const cellWidth = Math.round(window.template.cells[cell.cell_index].width_ratio * window.width_mm);
+                                    const cellHeight = Math.round(window.template.cells[cell.cell_index].height_ratio * window.height_mm);
+                                    
+                                    return `• Cell ${cell.cell_index + 1}: ${cellWidth}×${cellHeight}mm - ${directions.length ? directions.join(', ') + ' opening' : 'Fixed'}`;
+                                }).join('<br>')}
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button class="btn btn-sm btn-outline" onclick="showWindowDetails(${window.id})">View Details</button>
+                            <button class="btn btn-sm btn-error" onclick="removeWindow(${window.id})">Remove</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -333,6 +483,98 @@
         function removeWindow(windowId) {
             selectedWindows = selectedWindows.filter(window => window.id !== windowId);
             renderSelectedWindows();
+        }
+        
+        function showWindowDetails(windowId) {
+            const window = selectedWindows.find(w => w.id === windowId);
+            if (!window) return;
+            
+            // Create full-screen modal for detailed technical drawing
+            const modal = document.createElement('div');
+            modal.className = 'modal modal-open';
+            modal.innerHTML = `
+                <div class="modal-box w-11/12 max-w-7xl h-5/6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-xl">${window.label} - Technical Drawing</h3>
+                        <button class="btn btn-sm btn-circle btn-ghost" onclick="this.closest('.modal').remove()">✕</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+                        <div class="lg:col-span-2">
+                            <div class="border rounded-lg p-4 bg-white h-full flex items-center justify-center">
+                                ${generateWindowPreviewSVG(window.template, 600, 400, window.width_mm, window.height_mm, window.cells)}
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="card bg-base-200">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title text-sm">Window Specifications</h4>
+                                    <div class="text-xs space-y-1">
+                                        <p><strong>Template:</strong> ${window.template.name}</p>
+                                        <p><strong>Overall Dimensions:</strong> ${window.width_mm} × ${window.height_mm} mm</p>
+                                        <p><strong>Total Area:</strong> ${((window.width_mm * window.height_mm) / 1000000).toFixed(2)} m²</p>
+                                        <p><strong>Cells:</strong> ${window.cells.length}</p>
+                                        ${window.notes ? `<p><strong>Notes:</strong> ${window.notes}</p>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card bg-base-200">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title text-sm">Cell Details</h4>
+                                    <div class="text-xs space-y-2 max-h-64 overflow-y-auto">
+                                        ${window.cells.map(cell => {
+                                            const templateCell = window.template.cells[cell.cell_index];
+                                            const cellWidth = Math.round(templateCell.width_ratio * window.width_mm);
+                                            const cellHeight = Math.round(templateCell.height_ratio * window.height_mm);
+                                            const cellArea = ((cellWidth * cellHeight) / 1000000).toFixed(2);
+                                            
+                                            const directions = [];
+                                            if (cell.open_left) directions.push('Left');
+                                            if (cell.open_right) directions.push('Right');
+                                            if (cell.open_top) directions.push('Top');
+                                            if (cell.open_bottom) directions.push('Bottom');
+                                            
+                                            return `
+                                                <div class="border-b pb-2">
+                                                    <p class="font-medium">Cell ${cell.cell_index + 1}</p>
+                                                    <p>Dimensions: ${cellWidth} × ${cellHeight} mm</p>
+                                                    <p>Area: ${cellArea} m²</p>
+                                                    <p>Position: ${Math.round(templateCell.x * 100)}%, ${Math.round(templateCell.y * 100)}%</p>
+                                                    <p>Opening: ${directions.length ? directions.join(', ') : 'Fixed'}</p>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card bg-base-200">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title text-sm">Legend</h4>
+                                    <div class="text-xs space-y-1">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-4 h-0.5 bg-blue-500 border border-blue-500"></div>
+                                            <span>Cell boundaries</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-4 h-0.5 border-dashed border-red-500 bg-red-500"></div>
+                                            <span>Opening directions (60° angle)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-4 h-0.5 border-dashed border-gray-500"></div>
+                                            <span>Dimension lines</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
     </script>
 
