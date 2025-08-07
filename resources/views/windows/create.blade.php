@@ -481,21 +481,22 @@
                             stroke="#000" stroke-width="2" fill="#000"/>`);
                     }
 
-                    // Folding options - zig-zag arrows (2 sharp angles)
+                    // Folding options - zig-zag arrows (3 sharp angles)
                     if (config.folding_left) {
                         const foldY = centerY;
                         const foldStartX = x + w - 15;
                         const foldEndX = x + 15;
-                        const zigzagHeight = 6;
+                        const zigzagHeight = 10;
                         const arrowSize = 4;
                         
-                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        // Calculate middle points for 3-angle zig-zag with very sharp angles
                         const totalLength = foldStartX - (foldEndX + arrowSize);
-                        const segment1X = foldStartX - totalLength * 0.25;
-                        const segment2X = foldStartX - totalLength * 0.75;
+                        const segment1X = foldStartX - totalLength * 0.2;
+                        const segment2X = foldStartX - totalLength * 0.5;
+                        const segment3X = foldStartX - totalLength * 0.8;
                         
-                        // Create sharp zig-zag path with just 2 angles
-                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${foldEndX + arrowSize} ${foldY}`;
+                        // Create very sharp zig-zag path with 3 angles
+                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${segment3X} ${foldY - zigzagHeight} L${foldEndX + arrowSize} ${foldY}`;
                         
                         elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
                         // Arrow head
@@ -507,16 +508,17 @@
                         const foldY = centerY;
                         const foldStartX = x + 15;
                         const foldEndX = x + w - 15;
-                        const zigzagHeight = 6;
+                        const zigzagHeight = 10;
                         const arrowSize = 4;
                         
-                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        // Calculate middle points for 3-angle zig-zag with very sharp angles
                         const totalLength = (foldEndX - arrowSize) - foldStartX;
-                        const segment1X = foldStartX + totalLength * 0.25;
-                        const segment2X = foldStartX + totalLength * 0.75;
+                        const segment1X = foldStartX + totalLength * 0.2;
+                        const segment2X = foldStartX + totalLength * 0.5;
+                        const segment3X = foldStartX + totalLength * 0.8;
                         
-                        // Create sharp zig-zag path with just 2 angles
-                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${foldEndX - arrowSize} ${foldY}`;
+                        // Create very sharp zig-zag path with 3 angles
+                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${segment3X} ${foldY - zigzagHeight} L${foldEndX - arrowSize} ${foldY}`;
                         
                         elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
                         // Arrow head
@@ -528,16 +530,17 @@
                         const foldX = centerX;
                         const foldStartY = y + h - 15;
                         const foldEndY = y + 15;
-                        const zigzagWidth = 6;
+                        const zigzagWidth = 10;
                         const arrowSize = 4;
                         
-                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        // Calculate middle points for 3-angle zig-zag with very sharp angles
                         const totalLength = foldStartY - (foldEndY + arrowSize);
-                        const segment1Y = foldStartY - totalLength * 0.25;
-                        const segment2Y = foldStartY - totalLength * 0.75;
+                        const segment1Y = foldStartY - totalLength * 0.2;
+                        const segment2Y = foldStartY - totalLength * 0.5;
+                        const segment3Y = foldStartY - totalLength * 0.8;
                         
-                        // Create sharp zig-zag path with just 2 angles
-                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX} ${foldEndY + arrowSize}`;
+                        // Create very sharp zig-zag path with 3 angles
+                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX - zigzagWidth} ${segment3Y} L${foldX} ${foldEndY + arrowSize}`;
                         
                         elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
                         // Arrow head
@@ -549,16 +552,17 @@
                         const foldX = centerX;
                         const foldStartY = y + 15;
                         const foldEndY = y + h - 15;
-                        const zigzagWidth = 6;
+                        const zigzagWidth = 10;
                         const arrowSize = 4;
                         
-                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        // Calculate middle points for 3-angle zig-zag with very sharp angles
                         const totalLength = (foldEndY - arrowSize) - foldStartY;
-                        const segment1Y = foldStartY + totalLength * 0.25;
-                        const segment2Y = foldStartY + totalLength * 0.75;
+                        const segment1Y = foldStartY + totalLength * 0.2;
+                        const segment2Y = foldStartY + totalLength * 0.5;
+                        const segment3Y = foldStartY + totalLength * 0.8;
                         
-                        // Create sharp zig-zag path with just 2 angles
-                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX} ${foldEndY - arrowSize}`;
+                        // Create very sharp zig-zag path with 3 angles
+                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX - zigzagWidth} ${segment3Y} L${foldX} ${foldEndY - arrowSize}`;
                         
                         elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
                         // Arrow head
@@ -839,8 +843,8 @@
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <svg width="16" height="8" viewBox="0 0 16 8">
-                                                <path d="M1 4 L4 1 L10 7 L13 4" stroke="black" stroke-width="1" fill="none"/>
-                                                <path d="M11 3 L13 4 L11 5" stroke="black" stroke-width="1" fill="black"/>
+                                                <path d="M1 4 L3 1 L6 7 L9 1 L12 4" stroke="black" stroke-width="1" fill="none"/>
+                                                <path d="M10 3 L12 4 L10 5" stroke="black" stroke-width="1" fill="black"/>
                                             </svg>
                                             <span>Folding directions (zig-zag arrows)</span>
                                         </div>
