@@ -161,23 +161,72 @@
             const cellsConfig = template.cells.map((cell, index) => `
                 <div class="border rounded-lg p-4">
                     <h5 class="font-medium mb-2">Cell ${cell.cell_index + 1}</h5>
-                    <div class="grid grid-cols-2 gap-2">
-                        <label class="flex items-center">
-                            <input type="checkbox" id="cell-${index}-left" class="checkbox checkbox-sm mr-2">
-                            <span class="text-sm">Open Left</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="cell-${index}-right" class="checkbox checkbox-sm mr-2">
-                            <span class="text-sm">Open Right</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="cell-${index}-top" class="checkbox checkbox-sm mr-2">
-                            <span class="text-sm">Open Top</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" id="cell-${index}-bottom" class="checkbox checkbox-sm mr-2">
-                            <span class="text-sm">Open Bottom</span>
-                        </label>
+                    <div class="space-y-3">
+                        <div>
+                            <h6 class="text-xs font-medium text-gray-600 mb-1">Hinged Opening</h6>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-left" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Open Left</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-right" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Open Right</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-top" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Open Top</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-bottom" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Open Bottom</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h6 class="text-xs font-medium text-gray-600 mb-1">Sliding</h6>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-slide-left" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Slide Left</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-slide-right" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Slide Right</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-slide-top" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Slide Top</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-slide-bottom" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Slide Bottom</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h6 class="text-xs font-medium text-gray-600 mb-1">Folding</h6>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-folding-left" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Folding Left</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-folding-right" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Folding Right</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-folding-top" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Folding Top</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="cell-${index}-folding-bottom" class="checkbox checkbox-sm mr-2">
+                                    <span class="text-sm">Folding Bottom</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -240,7 +289,9 @@
             setTimeout(() => {
                 const previewInputs = ['window-width', 'window-height'];
                 const checkboxes = template.cells.map((_, index) =>
-                    [`cell-${index}-left`, `cell-${index}-right`, `cell-${index}-top`, `cell-${index}-bottom`]
+                    [`cell-${index}-left`, `cell-${index}-right`, `cell-${index}-top`, `cell-${index}-bottom`,
+                     `cell-${index}-slide-left`, `cell-${index}-slide-right`, `cell-${index}-slide-top`, `cell-${index}-slide-bottom`,
+                     `cell-${index}-folding-left`, `cell-${index}-folding-right`, `cell-${index}-folding-top`, `cell-${index}-folding-bottom`]
                 ).flat();
 
                 [...previewInputs, ...checkboxes].forEach(id => {
@@ -262,7 +313,15 @@
                 open_left: document.getElementById(`cell-${index}-left`)?.checked || false,
                 open_right: document.getElementById(`cell-${index}-right`)?.checked || false,
                 open_top: document.getElementById(`cell-${index}-top`)?.checked || false,
-                open_bottom: document.getElementById(`cell-${index}-bottom`)?.checked || false
+                open_bottom: document.getElementById(`cell-${index}-bottom`)?.checked || false,
+                slide_left: document.getElementById(`cell-${index}-slide-left`)?.checked || false,
+                slide_right: document.getElementById(`cell-${index}-slide-right`)?.checked || false,
+                slide_top: document.getElementById(`cell-${index}-slide-top`)?.checked || false,
+                slide_bottom: document.getElementById(`cell-${index}-slide-bottom`)?.checked || false,
+                folding_left: document.getElementById(`cell-${index}-folding-left`)?.checked || false,
+                folding_right: document.getElementById(`cell-${index}-folding-right`)?.checked || false,
+                folding_top: document.getElementById(`cell-${index}-folding-top`)?.checked || false,
+                folding_bottom: document.getElementById(`cell-${index}-folding-bottom`)?.checked || false
             }));
 
             const previewDiv = document.getElementById('window-preview');
@@ -372,6 +431,140 @@
                         elements.push(`<path d="M${startX1} ${startY} L${hingeX} ${hingeY} M${startX2} ${startY} L${hingeX} ${hingeY}"
                             stroke="#666" stroke-width="2" stroke-dasharray="4,2"/>`);
                     }
+
+                    // Sliding options - solid arrows
+                    if (config.slide_left) {
+                        const arrowY = centerY;
+                        const arrowStartX = x + w - 15;
+                        const arrowEndX = x + 10;
+                        const arrowSize = 4;
+                        
+                        elements.push(`<path d="M${arrowStartX} ${arrowY} L${arrowEndX} ${arrowY}"
+                            stroke="#000" stroke-width="3" fill="none"/>`);
+                        elements.push(`<path d="M${arrowEndX + arrowSize} ${arrowY - arrowSize} L${arrowEndX} ${arrowY} L${arrowEndX + arrowSize} ${arrowY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.slide_right) {
+                        const arrowY = centerY;
+                        const arrowStartX = x + 15;
+                        const arrowEndX = x + w - 10;
+                        const arrowSize = 4;
+                        
+                        elements.push(`<path d="M${arrowStartX} ${arrowY} L${arrowEndX} ${arrowY}"
+                            stroke="#000" stroke-width="3" fill="none"/>`);
+                        elements.push(`<path d="M${arrowEndX - arrowSize} ${arrowY - arrowSize} L${arrowEndX} ${arrowY} L${arrowEndX - arrowSize} ${arrowY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.slide_top) {
+                        const arrowX = centerX;
+                        const arrowStartY = y + h - 15;
+                        const arrowEndY = y + 10;
+                        const arrowSize = 4;
+                        
+                        elements.push(`<path d="M${arrowX} ${arrowStartY} L${arrowX} ${arrowEndY}"
+                            stroke="#000" stroke-width="3" fill="none"/>`);
+                        elements.push(`<path d="M${arrowX - arrowSize} ${arrowEndY + arrowSize} L${arrowX} ${arrowEndY} L${arrowX + arrowSize} ${arrowEndY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.slide_bottom) {
+                        const arrowX = centerX;
+                        const arrowStartY = y + 15;
+                        const arrowEndY = y + h - 10;
+                        const arrowSize = 4;
+                        
+                        elements.push(`<path d="M${arrowX} ${arrowStartY} L${arrowX} ${arrowEndY}"
+                            stroke="#000" stroke-width="3" fill="none"/>`);
+                        elements.push(`<path d="M${arrowX - arrowSize} ${arrowEndY - arrowSize} L${arrowX} ${arrowEndY} L${arrowX + arrowSize} ${arrowEndY - arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    // Folding options - zig-zag arrows (2 sharp angles)
+                    if (config.folding_left) {
+                        const foldY = centerY;
+                        const foldStartX = x + w - 15;
+                        const foldEndX = x + 15;
+                        const zigzagHeight = 6;
+                        const arrowSize = 4;
+                        
+                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        const totalLength = foldStartX - (foldEndX + arrowSize);
+                        const segment1X = foldStartX - totalLength * 0.25;
+                        const segment2X = foldStartX - totalLength * 0.75;
+                        
+                        // Create sharp zig-zag path with just 2 angles
+                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${foldEndX + arrowSize} ${foldY}`;
+                        
+                        elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
+                        // Arrow head
+                        elements.push(`<path d="M${foldEndX + arrowSize} ${foldY - arrowSize} L${foldEndX} ${foldY} L${foldEndX + arrowSize} ${foldY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.folding_right) {
+                        const foldY = centerY;
+                        const foldStartX = x + 15;
+                        const foldEndX = x + w - 15;
+                        const zigzagHeight = 6;
+                        const arrowSize = 4;
+                        
+                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        const totalLength = (foldEndX - arrowSize) - foldStartX;
+                        const segment1X = foldStartX + totalLength * 0.25;
+                        const segment2X = foldStartX + totalLength * 0.75;
+                        
+                        // Create sharp zig-zag path with just 2 angles
+                        const pathData = `M${foldStartX} ${foldY} L${segment1X} ${foldY - zigzagHeight} L${segment2X} ${foldY + zigzagHeight} L${foldEndX - arrowSize} ${foldY}`;
+                        
+                        elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
+                        // Arrow head
+                        elements.push(`<path d="M${foldEndX - arrowSize} ${foldY - arrowSize} L${foldEndX} ${foldY} L${foldEndX - arrowSize} ${foldY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.folding_top) {
+                        const foldX = centerX;
+                        const foldStartY = y + h - 15;
+                        const foldEndY = y + 15;
+                        const zigzagWidth = 6;
+                        const arrowSize = 4;
+                        
+                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        const totalLength = foldStartY - (foldEndY + arrowSize);
+                        const segment1Y = foldStartY - totalLength * 0.25;
+                        const segment2Y = foldStartY - totalLength * 0.75;
+                        
+                        // Create sharp zig-zag path with just 2 angles
+                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX} ${foldEndY + arrowSize}`;
+                        
+                        elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
+                        // Arrow head
+                        elements.push(`<path d="M${foldX - arrowSize} ${foldEndY + arrowSize} L${foldX} ${foldEndY} L${foldX + arrowSize} ${foldEndY + arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
+
+                    if (config.folding_bottom) {
+                        const foldX = centerX;
+                        const foldStartY = y + 15;
+                        const foldEndY = y + h - 15;
+                        const zigzagWidth = 6;
+                        const arrowSize = 4;
+                        
+                        // Calculate middle points for 2-angle zig-zag with sharper angles
+                        const totalLength = (foldEndY - arrowSize) - foldStartY;
+                        const segment1Y = foldStartY + totalLength * 0.25;
+                        const segment2Y = foldStartY + totalLength * 0.75;
+                        
+                        // Create sharp zig-zag path with just 2 angles
+                        const pathData = `M${foldX} ${foldStartY} L${foldX - zigzagWidth} ${segment1Y} L${foldX + zigzagWidth} ${segment2Y} L${foldX} ${foldEndY - arrowSize}`;
+                        
+                        elements.push(`<path d="${pathData}" stroke="#000" stroke-width="2" fill="none"/>`);
+                        // Arrow head
+                        elements.push(`<path d="M${foldX - arrowSize} ${foldEndY - arrowSize} L${foldX} ${foldEndY} L${foldX + arrowSize} ${foldEndY - arrowSize}"
+                            stroke="#000" stroke-width="2" fill="#000"/>`);
+                    }
                 }
 
                 // Cell dimensions (if window dimensions provided)
@@ -443,7 +636,15 @@
                 open_left: document.getElementById(`cell-${index}-left`).checked,
                 open_right: document.getElementById(`cell-${index}-right`).checked,
                 open_top: document.getElementById(`cell-${index}-top`).checked,
-                open_bottom: document.getElementById(`cell-${index}-bottom`).checked
+                open_bottom: document.getElementById(`cell-${index}-bottom`).checked,
+                slide_left: document.getElementById(`cell-${index}-slide-left`).checked,
+                slide_right: document.getElementById(`cell-${index}-slide-right`).checked,
+                slide_top: document.getElementById(`cell-${index}-slide-top`).checked,
+                slide_bottom: document.getElementById(`cell-${index}-slide-bottom`).checked,
+                folding_left: document.getElementById(`cell-${index}-folding-left`).checked,
+                folding_right: document.getElementById(`cell-${index}-folding-right`).checked,
+                folding_top: document.getElementById(`cell-${index}-folding-top`).checked,
+                folding_bottom: document.getElementById(`cell-${index}-folding-bottom`).checked
             }));
 
             const window = {
@@ -492,16 +693,34 @@
                             <div class="bg-gray-50 rounded p-3 text-xs">
                                 <strong>Cell Configurations:</strong><br>
                                 ${window.cells.map(cell => {
-                                    const directions = [];
-                                    if (cell.open_left) directions.push('Left');
-                                    if (cell.open_right) directions.push('Right');
-                                    if (cell.open_top) directions.push('Top');
-                                    if (cell.open_bottom) directions.push('Bottom');
+                                    const openings = [];
+                                    const slides = [];
+                                    const foldings = [];
+                                    
+                                    if (cell.open_left) openings.push('Left');
+                                    if (cell.open_right) openings.push('Right');
+                                    if (cell.open_top) openings.push('Top');
+                                    if (cell.open_bottom) openings.push('Bottom');
+                                    
+                                    if (cell.slide_left) slides.push('Left');
+                                    if (cell.slide_right) slides.push('Right');
+                                    if (cell.slide_top) slides.push('Top');
+                                    if (cell.slide_bottom) slides.push('Bottom');
+                                    
+                                    if (cell.folding_left) foldings.push('Left');
+                                    if (cell.folding_right) foldings.push('Right');
+                                    if (cell.folding_top) foldings.push('Top');
+                                    if (cell.folding_bottom) foldings.push('Bottom');
 
                                     const cellWidth = Math.round(window.template.cells[cell.cell_index].width_ratio * window.width_mm);
                                     const cellHeight = Math.round(window.template.cells[cell.cell_index].height_ratio * window.height_mm);
 
-                                    return `• Cell ${cell.cell_index + 1}: ${cellWidth}×${cellHeight}mm - ${directions.length ? directions.join(', ') + ' opening' : 'Fixed'}`;
+                                    const features = [];
+                                    if (openings.length) features.push(openings.join(', ') + ' opening');
+                                    if (slides.length) features.push(slides.join(', ') + ' sliding');
+                                    if (foldings.length) features.push(foldings.join(', ') + ' folding');
+
+                                    return `• Cell ${cell.cell_index + 1}: ${cellWidth}×${cellHeight}mm - ${features.length ? features.join(', ') : 'Fixed'}`;
                                 }).join('<br>')}
                             </div>
                         </div>
@@ -564,11 +783,29 @@
                                             const cellHeight = Math.round(templateCell.height_ratio * window.height_mm);
                                             const cellArea = ((cellWidth * cellHeight) / 1000000).toFixed(2);
 
-                                            const directions = [];
-                                            if (cell.open_left) directions.push('Left');
-                                            if (cell.open_right) directions.push('Right');
-                                            if (cell.open_top) directions.push('Top');
-                                            if (cell.open_bottom) directions.push('Bottom');
+                                            const openings = [];
+                                            const slides = [];
+                                            const foldings = [];
+                                            
+                                            if (cell.open_left) openings.push('Left');
+                                            if (cell.open_right) openings.push('Right');
+                                            if (cell.open_top) openings.push('Top');
+                                            if (cell.open_bottom) openings.push('Bottom');
+                                            
+                                            if (cell.slide_left) slides.push('Left');
+                                            if (cell.slide_right) slides.push('Right');
+                                            if (cell.slide_top) slides.push('Top');
+                                            if (cell.slide_bottom) slides.push('Bottom');
+                                            
+                                            if (cell.folding_left) foldings.push('Left');
+                                            if (cell.folding_right) foldings.push('Right');
+                                            if (cell.folding_top) foldings.push('Top');
+                                            if (cell.folding_bottom) foldings.push('Bottom');
+
+                                            const features = [];
+                                            if (openings.length) features.push('Opening: ' + openings.join(', '));
+                                            if (slides.length) features.push('Sliding: ' + slides.join(', '));
+                                            if (foldings.length) features.push('Folding: ' + foldings.join(', '));
 
                                             return `
                                                 <div class="border-b pb-2">
@@ -576,7 +813,7 @@
                                                     <p>Dimensions: ${cellWidth} × ${cellHeight} mm</p>
                                                     <p>Area: ${cellArea} m²</p>
                                                     <p>Position: ${Math.round(templateCell.x * 100)}%, ${Math.round(templateCell.y * 100)}%</p>
-                                                    <p>Opening: ${directions.length ? directions.join(', ') : 'Fixed'}</p>
+                                                    <p>Features: ${features.length ? features.join('<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') : 'Fixed'}</p>
                                                 </div>
                                             `;
                                         }).join('')}
@@ -595,6 +832,17 @@
                                         <div class="flex items-center gap-2">
                                             <div class="w-4 h-0.5 border-dashed border-gray-500 bg-gray-500"></div>
                                             <span>Opening directions (60° angle)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-4 h-0.5 bg-black"></div>
+                                            <span>→ Sliding directions (solid arrows)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <svg width="16" height="8" viewBox="0 0 16 8">
+                                                <path d="M1 4 L4 1 L10 7 L13 4" stroke="black" stroke-width="1" fill="none"/>
+                                                <path d="M11 3 L13 4 L11 5" stroke="black" stroke-width="1" fill="black"/>
+                                            </svg>
+                                            <span>Folding directions (zig-zag arrows)</span>
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <div class="w-4 h-0.5 border-dashed border-gray-500"></div>
