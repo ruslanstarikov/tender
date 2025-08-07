@@ -21,9 +21,17 @@ use App\Http\Controllers\Customer\DashboardController as CustomerDashboardContro
 |
 */
 
+// Route::get('/', function () {
+//     return redirect()->route('customer.login');
+// });
+
 Route::get('/', function () {
-    return redirect()->route('customer.login');
-});
+    return view('coming-soon.customer');
+})->name('home');
+
+Route::get('/suppliers', function () {
+    return view('coming-soon.supplier');
+})->name('suppliers');
 // Admin Authentication Routes (no middleware)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
