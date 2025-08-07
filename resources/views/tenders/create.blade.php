@@ -866,18 +866,18 @@
                     <input type="hidden" name="windows[${window.id}][notes]" value="${window.notes}">
                     ${window.cells.map((cell, cellIndex) => `
                         <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][cell_index]" value="${cell.cell_index}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_left]" value="${cell.open_left}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_right]" value="${cell.open_right}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_top]" value="${cell.open_top}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_bottom]" value="${cell.open_bottom}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_left]" value="${cell.slide_left}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_right]" value="${cell.slide_right}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_top]" value="${cell.slide_top}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_bottom]" value="${cell.slide_bottom}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_left]" value="${cell.folding_left}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_right]" value="${cell.folding_right}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_top]" value="${cell.folding_top}">
-                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_bottom]" value="${cell.folding_bottom}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_left]" value="${cell.open_left ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_right]" value="${cell.open_right ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_top]" value="${cell.open_top ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][open_bottom]" value="${cell.open_bottom ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_left]" value="${cell.slide_left ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_right]" value="${cell.slide_right ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_top]" value="${cell.slide_top ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][slide_bottom]" value="${cell.slide_bottom ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_left]" value="${cell.folding_left ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_right]" value="${cell.folding_right ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_top]" value="${cell.folding_top ? '1' : '0'}">
+                        <input type="hidden" name="windows[${window.id}][cells][${cellIndex}][folding_bottom]" value="${cell.folding_bottom ? '1' : '0'}">
                     `).join('')}
                 </div>
             `).join('');

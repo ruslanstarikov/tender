@@ -27,4 +27,9 @@ class Tender extends Model
     {
         return $this->hasMany(TenderFrame::class);
     }
+
+    public function windows()
+    {
+        return $this->hasMany(Window::class);
+    }
 }
